@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for
 from dotenv import load_dotenv
 
 app = Flask(__name__)
@@ -27,8 +27,25 @@ def about():
 
 
 @app.route("/contact")
-def contact():
-    return render_template("contact.html")
+def contact(is_form="show"):
+
+    if request.args:
+        is_form = request.args["is_form"]
+
+    print(is_form, "is_form")
+    return render_template("contact.html", is_form=is_form)
+
+
+@app.route("/submit_form", methods=["POST", "GET"])
+def submit_form():
+    error = None
+    if request.method == "POST":
+        data = request.form.to_dict()
+
+        print(data, "dataDDDDDDDDDDDDDDDD")
+        return redirect(url_for("contact", is_form="hide"))
+    else:
+        return redirect("/")
 
 
 @app.errorhandler(404)
