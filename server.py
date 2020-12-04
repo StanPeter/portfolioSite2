@@ -44,12 +44,12 @@ def write_to_file(data):
 
 
 def write_to_csv(data):
-    with open("tempDatabase.csv", mode="a") as db:
+    with open("tempDatabase.csv", newline='', mode="a") as db:
         email = data["email"]
         subject = data["subject"]
         text = data["text"]
         csv_writer = csv.writer(
-            db, delimiter=",", lineterminator='\n', quotechar='"', quoting=csv.QUOTE_MINIMAL
+            db, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL
         )
         csv_writer.writerow([email, subject, text])
     pass
@@ -58,11 +58,14 @@ def write_to_csv(data):
 @app.route("/submit_form", methods=["POST", "GET"])
 def submit_form():
     if request.method == "POST":
-        data = request.form.to_dict()
-        write_to_file(data)
-        write_to_csv(data)
+        try:
+            data = request.form.to_dict()
+            write_to_file(data)
+            write_to_csv(data)
 
-        return redirect(url_for("contact", is_form="hide"))
+            return redirect(url_for("contact", is_form="hide"))
+        except:
+            return 'Did not save correctly'
     return redirect("/")
 
 
