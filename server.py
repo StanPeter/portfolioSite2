@@ -16,12 +16,6 @@ def home():
 def works():
     return render_template("works.html")
 
-
-@app.route("/work")
-def work():
-    return render_template("work.html")
-
-
 @app.route("/about")
 def about():
     return render_template("about.html")
